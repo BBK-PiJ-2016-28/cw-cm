@@ -19,7 +19,7 @@ public class ContactManagerTest {
 		Set cons = new HashSet<ContactImpl>();
 		cons.add(mark);
 		ContactManagerImpl cm = new ContactManagerImpl();
-		cm.addFutureMeeting(cons, date);
+		System.out.println(cm.addFutureMeeting(cons, date));
 
 	}
 
