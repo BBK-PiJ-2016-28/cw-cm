@@ -13,7 +13,7 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-		int ID = (int)(Math.random()*50 + 1);
+		int ID = (int)(Math.random()*500 + 1000);
 		
 		return ID;
 	}
