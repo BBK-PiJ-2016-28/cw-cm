@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import Impl.ContactImpl;
 import Impl.ContactManagerImpl;
+import Impl.MeetingImpl;
 
 
 public class ContactManagerTest {
@@ -20,6 +21,7 @@ public class ContactManagerTest {
 		cons.add(mark);
 		ContactManagerImpl cm = new ContactManagerImpl();
 		System.out.println(cm.addFutureMeeting(cons, date));
+		cm.currentDate();
 
 	}
 
