@@ -1,4 +1,10 @@
 package Impl;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +25,17 @@ public class ContactManagerImpl implements ContactManager {
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 		int ID = (int)(Math.random()*500 + 1000); //Creates a random, positive integer for the ID
 		FutureMeetingImpl fm = new FutureMeetingImpl(contacts, ID, date);
+		makeNewFolder();
+		 
+	      try {
+	         FileOutputStream fileOut = new FileOutputStream("/Users/simonaugustus/Documents/workspace/PiJ - cw3/./serialized/newfuturemeeting.out");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(fm);
+	         out.close();
+	         fileOut.close();
+	      }catch(IOException i) {
+	         i.printStackTrace();
+	      }
 		return  ID;
 	}
 	
@@ -98,5 +115,18 @@ public class ContactManagerImpl implements ContactManager {
 		 return calobj = Calendar.getInstance();
 	}
 	
-	
+	public void makeNewFolder(){
+		File currentFolder = new File(".");
+        File workingFolder = new File(currentFolder, "serialized");
+        if (!workingFolder.exists()) {
+            workingFolder.mkdir();
+            System.out.println("Made the folder");
+        } else{
+        	System.out.println("Folder already exists. Saving to... ");
+        }
+        System.out.println(workingFolder.getAbsolutePath());
+    }
 }
+	
+	
+
