@@ -1,5 +1,7 @@
 package Impl;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import Spec.Contact;
@@ -10,6 +12,8 @@ import Spec.PastMeeting;
 
 public class ContactManagerImpl implements ContactManager {
 	Calendar calobj;
+	
+
 	
 	@Override
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {

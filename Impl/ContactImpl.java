@@ -1,8 +1,13 @@
 package Impl;
 
+import java.io.Serializable;
+
 import Spec.Contact;
 
-public class ContactImpl implements Contact {
+public class ContactImpl implements Contact, Serializable {
+	private int ID;
+	private String name;
+	private String notes;
 	
 	
 
@@ -26,7 +31,7 @@ public class ContactImpl implements Contact {
 
 	@Override
 	public void addNotes(String note) {
-		// TODO Auto-generated method stub
+		this.notes = notes + " New note: " + note;
 		
 	}
 

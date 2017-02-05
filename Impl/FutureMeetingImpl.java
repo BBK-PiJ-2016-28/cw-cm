@@ -2,6 +2,7 @@ package Impl;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 import Spec.Contact;
@@ -10,7 +11,7 @@ import Spec.FutureMeeting;
 public class FutureMeetingImpl implements FutureMeeting, Serializable {
 	private int ID;
 	private Calendar date;
-	private Set<Contact> contacts;
+	private Set<Contact> contacts = new HashSet();
 
 	/**
 	 * 
@@ -28,6 +29,7 @@ public class FutureMeetingImpl implements FutureMeeting, Serializable {
 			this.ID = ID;
 			System.out.println("New future meeting added for " + date + ". Your ID for this meeting is " + ID);
 		}
+		
 		
 	}
 
