@@ -5,6 +5,10 @@ import java.util.Set;
 import Impl.ContactImpl;
 import Impl.ContactManagerImpl;
 import Impl.MeetingImpl;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 
 
 public class ContactManagerTest {
