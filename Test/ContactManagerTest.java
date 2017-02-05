@@ -1,10 +1,13 @@
 package Test;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 import Impl.ContactImpl;
 import Impl.ContactManagerImpl;
 import Impl.MeetingImpl;
+import Spec.Contact;
+
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,20 +16,21 @@ import org.junit.Test;
 
 public class ContactManagerTest {
 	
-
-	public static void main(String[] args) {
-		int year = 2017;
-		int month = 03;
-		int day = 27;
+	@Test
+	public void testaddFutureMeeting(){
 		Calendar date = Calendar.getInstance();
-		date.set(year, month, day);
-		ContactImpl mark = new ContactImpl();
-		Set cons = new HashSet<ContactImpl>();
+		date.set(2017, 02, 27);
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String formatted = format1.format(date.getTime());
+		System.out.println(formatted);
+
+		Contact mark = new ContactImpl();
+		Set<Contact> cons = new HashSet<Contact>();
 		cons.add(mark);
 		ContactManagerImpl cm = new ContactManagerImpl();
-		System.out.println(cm.addFutureMeeting(cons, date));
-		cm.currentDate();
-
+		cm.addFutureMeeting(cons, date);
 	}
+
+	
 
 }
