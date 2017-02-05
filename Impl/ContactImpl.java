@@ -3,6 +3,8 @@ package Impl;
 import Spec.Contact;
 
 public class ContactImpl implements Contact {
+	
+	
 
 	@Override
 	public int getId() {

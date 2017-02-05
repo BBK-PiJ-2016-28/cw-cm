@@ -1,5 +1,4 @@
 package Impl;
-
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -10,17 +9,18 @@ import Spec.Meeting;
 import Spec.PastMeeting;
 
 public class ContactManagerImpl implements ContactManager {
+	Calendar calobj;
 	
 	@Override
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-		int ID = (int)(Math.random()*500 + 1000);
-		
-		return ID;
+		int ID = (int)(Math.random()*500 + 1000); //Creates a random, positive integer for the ID
+		FutureMeetingImpl fm = new FutureMeetingImpl(contacts, ID, date);
+		return  ID;
 	}
 	
 	@Override
 	public PastMeeting getPastMeeting(int id) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	
@@ -88,6 +88,10 @@ public class ContactManagerImpl implements ContactManager {
 	public void flush() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Calendar currentDate(){
+		 return calobj = Calendar.getInstance();
 	}
 	
 	
