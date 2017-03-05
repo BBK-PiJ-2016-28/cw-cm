@@ -9,6 +9,34 @@ public class ContactImpl implements Contact, Serializable {
 	private String name;
 	private String notes;
 	
+	public ContactImpl(){
+		
+	}
+	
+	public ContactImpl(String name){
+		setName(name);
+	}
+	
+	public ContactImpl(int ID, String name, String notes){
+		try {
+			setID(ID);
+		} catch (IllegalArgumentException e) {
+			System.out.println("You must provide an ID for" + name);
+		}
+		
+		setName(name);
+		setNotes(notes);
+	}
+	
+	public ContactImpl(int ID, String name){
+			try {
+				setID(ID);
+			} catch (IllegalArgumentException e) {
+				System.out.println("You must provide an ID for" + name);
+			}
+		setName(name);
+	}
+	
 
 	public void setID(int iD) {
 		ID = iD;
