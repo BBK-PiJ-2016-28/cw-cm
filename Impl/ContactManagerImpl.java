@@ -66,7 +66,6 @@ public void printallcontacts(){
 			System.out.println("No past meetings");
 		} else{
 		for(int x = 0; x < pastMeetingArray.size(); x++){
-			
 			pastMeetingReturn = pastMeetingArray.get(x);
 			if(pastMeetingReturn.getId() == id){
 				return pastMeetingReturn;
@@ -93,7 +92,6 @@ public void printallcontacts(){
 		readSerializedData();
 		if(futureMeetingArray.size() > 0){
 		for(int x = 0; x < futureMeetingArray.size(); x++){
-			System.out.println("Searching future meetings");
 			Meeting futureMeeting_BY_ID = futureMeetingArray.get(x);
 			if(futureMeeting_BY_ID.getId() == id){
 				return futureMeeting_BY_ID;
@@ -101,7 +99,6 @@ public void printallcontacts(){
 		}
 		if(pastMeetingArray.size() > 0){
 				for(int y = 0; y < pastMeetingArray.size(); y++){
-					System.out.println("Searching past meetings");
 					Meeting pastMeeting_BY_ID = pastMeetingArray.get(y);
 					if(pastMeeting_BY_ID.getId() == id){
 						return pastMeeting_BY_ID;
@@ -121,15 +118,13 @@ public void printallcontacts(){
 		Set<Contact> contacts = new HashSet<Contact>();
 		List<Contact> cn = new ArrayList<Contact>();
 		Contact currentContact = new ContactImpl();
-	/**	for(int x = 0; x < futureMeetingArray.size(); x++){
-			System.out.println("IN FOR LOOP");
-			Meeting currentMeeting = futureMeetingArray.get(x);
-			contacts = currentMeeting.getContacts();
-			if(contacts.contains(contact.getName())){
-				System.out.println("adding meeting");
-				futureMeetingList_FOR_CONTACT.add(currentMeeting);
+		for(int x = 0; x < futureMeetingArray.size(); x++){
+			Meeting futMeeting = futureMeetingArray.get(x);
+			if(futMeeting.getContacts().iterator().next().getName().equals(contact.getName())){
+				futureMeetingList_FOR_CONTACT.add(futMeeting);
 			}
-		} **/
+		}
+		System.out.println("list has " + futureMeetingList_FOR_CONTACT.size() + " contacts");
 		return futureMeetingList_FOR_CONTACT;
 	}
 	
@@ -144,7 +139,6 @@ public void printallcontacts(){
 			for(int x = 0; x < futureMeetingArray.size(); x++){
 				currentMeeting = futureMeetingArray.get(x);
 				Calendar currentMeetingsDate = currentMeeting.getDate();
-				System.out.println("s");
 				if(currentMeetingsDate.equals(date)){
 					System.out.println("Adding future meeting");
 					meetings.add(currentMeeting);
@@ -166,25 +160,18 @@ public void printallcontacts(){
 	@Override
 	public List<PastMeeting> getPastMeetingListFor(Contact contact) {
 		readSerializedData();
-		List<PastMeeting> pastMeetingArray_BY_CONTACT = new ArrayList<PastMeeting>();
+		List<PastMeeting> pastMeetingList_FOR_CONTACT = new ArrayList<PastMeeting>();
 		Set<Contact> contacts = new HashSet<Contact>();
-		Iterator<Contact> iterator = contacts.iterator();
+		List<Contact> cn = new ArrayList<Contact>();
+		Contact currentContact = new ContactImpl();
 		for(int x = 0; x < pastMeetingArray.size(); x++){
-			PastMeetingImpl pastMeeting_BY_CONTACT = pastMeetingArray.get(x);
-			Set<Contact> setofcontacts = pastMeeting_BY_CONTACT.getContacts();
-			Iterator<Contact> it2 = setofcontacts.iterator();
-			while(it2.hasNext()){
-				contacts.add(it2.next());
-			}
-			while(iterator.hasNext()){
-			//if(iterator.hasNext()){
-				if(iterator.next().getName().equals(contact.getName()))
-		//	if(pastMeeting_BY_CONTACT.getContact(contact) == contact){
-				pastMeetingArray.add(pastMeeting_BY_CONTACT);
+			PastMeeting pasMeeting = pastMeetingArray.get(x);
+			if(pasMeeting.getContacts().iterator().next().getName().equals(contact.getName())){
+				pastMeetingList_FOR_CONTACT.add(pasMeeting);
 			}
 		}
-		System.out.println(pastMeetingArray_BY_CONTACT.size());
-		return pastMeetingArray_BY_CONTACT;
+		System.out.println("list has " + pastMeetingList_FOR_CONTACT.size() + " contacts");
+		return pastMeetingList_FOR_CONTACT;
 	}
 	
 	@Override
@@ -223,13 +210,10 @@ public void printallcontacts(){
 	
 	@Override
 	public int addNewContact(String name, String notes) {
-		ContactImpl newContact = new ContactImpl();	
-		newContact.setName(name);
-		newContact.setNotes(notes);
+		int ID = (int)(Math.random()*500 + 1000);
+		ContactImpl newContact = new ContactImpl(ID,name, notes);	
 		allContacts.add(newContact);
-					
-	
-		return 0;
+		return ID;
 	}
 	
 	@Override
@@ -241,7 +225,6 @@ public void printallcontacts(){
 		for(int x = 0; x < allContacts.size(); x++){
 			newContact = allContacts.get(x);
 				if(newContact.getName().equals(name)){
-					System.out.println(newContact.getName());
 					listOfContacts.add(newContact);
 				}
 		}
@@ -254,21 +237,29 @@ public void printallcontacts(){
 		readSerializedData();
 		Contact newContact = new ContactImpl();
 		Set<Contact> listOfContacts = new HashSet<Contact>();
-		for(int id : ids){
-			for(int x = 0; x < allContacts.size(); x++){
-				newContact = allContacts.get(x);
-				int contactID = newContact.getId();
-					if(contactID == id){
-						listOfContacts.add(newContact);
-					}
+		for(int idsiterator = 0; idsiterator < ids.length; idsiterator++){
+		for (int x = 0; x < futureMeetingArray.size(); x++){
+			Meeting fm = futureMeetingArray.get(x);
+			if(fm.getId() == ids[idsiterator]){
+				listOfContacts.add(fm.getContacts().iterator().next());
+				System.out.println("FUTURE list for IDs has " + listOfContacts.size() + " contacts");
+			}
+			for (int y = 0; y < pastMeetingArray.size(); y++){
+				Meeting pm = pastMeetingArray.get(y);
+				if(pm.getId() == ids[idsiterator]){
+					listOfContacts.add(pm.getContacts().iterator().next());
+					System.out.println(" PAST list for IDs has " + listOfContacts.size() + " contacts");
 				}
+			}
+			}	
 		}
 		return listOfContacts;
 	}
 	
 	@Override
 	public void flush() {
-		
+		//The below method is what I designed prior to this - see that method
+		readSerializedData();
 		
 	}
 	
@@ -309,9 +300,6 @@ public void printallcontacts(){
 			  this.futureMeetingArray = (List<Meeting>)input.readObject();
 			  this.pastMeetingArray = (List<PastMeetingImpl>)pastInput.readObject();
 			  this.allContacts = (List<Contact>)contactsInput.readObject();
-			  System.out.println("PAST ARRAY = " + pastMeetingArray.size());
-			  System.out.println("FUTURE ARRAY = " + futureMeetingArray.size());
-			  System.out.println("DATA LOADED");
 			 } catch(ClassNotFoundException ex){
 			     ex.printStackTrace();
 			     System.out.println("No data");
