@@ -46,7 +46,7 @@ public class ContactManagerImpl implements ContactManager {
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }
-	      contactAdder(contacts, ID);
+	      contactAdder(contacts);
 		return  ID;
 	}
 	
@@ -70,7 +70,6 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public FutureMeeting getFutureMeeting(int id) {
-		readSerializedData();
 		for(int x = 0; x < futureMeetingArray.size(); x++){
 			Meeting currentMeeting = futureMeetingArray.get(x);
 			if(currentMeeting.getId() == id){
@@ -108,16 +107,10 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public List<Meeting> getFutureMeetingList(Contact contact) {
-		readSerializedData();
 		List<Meeting> futureMeetingList_FOR_CONTACT = new ArrayList<Meeting>();
-		Set<Contact> contacts = new HashSet<Contact>();
-		List<Contact> cn = new ArrayList<Contact>();
-		Contact currentContact = new ContactImpl();
 		for(int x = 0; x < futureMeetingArray.size(); x++){
-			System.out.println("IN FOR LOOP");
 			Meeting currentMeeting = futureMeetingArray.get(x);
-			contacts = currentMeeting.getContacts();
-			if(contacts.contains(contact)){
+			if(currentMeeting.getContacts() == contact){
 				futureMeetingList_FOR_CONTACT.add(currentMeeting);
 			}
 		}
@@ -126,37 +119,22 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public List<Meeting> getMeetingListOn(Calendar date) {
-		readSerializedData();
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		String formatted = format1.format(date.getTime());
-		List<Meeting> meetings = new ArrayList<Meeting>();
-		Meeting currentMeeting = futureMeetingArray.get(0);
-		if(futureMeetingArray.size() > 0){
-			for(int x = 0; x < futureMeetingArray.size(); x++){
-				currentMeeting = futureMeetingArray.get(x);
-				Calendar currentMeetingsDate = currentMeeting.getDate();
-				System.out.println("s");
-				if(currentMeetingsDate.equals(date)){
-					System.out.println("Adding future meeting");
-					meetings.add(currentMeeting);
-				}
+		List<Meeting> futureDatesMeeting = new ArrayList<Meeting>();
+		for(int x = 0; x < futureMeetingArray.size(); x++){
+			Meeting currentMeeting = futureMeetingArray.get(x);
+			if(currentMeeting.getDate() == date){
+				futureDatesMeeting.add(currentMeeting);
 			}
 		}
-		if(pastMeetingArray.size() > 0){
-			for (int p = 0; p < pastMeetingArray.size(); p++){
-				Meeting currentMeetingPast = new PastMeetingImpl();
-				if(currentMeetingPast.equals(date)){
-					System.out.println("Adding past meeting");
-					meetings.add(currentMeetingPast);
-				}
-			}
+		for(int y = 0; y < futureDatesMeeting.size(); y++){
+			Meeting meetingPrint = futureDatesMeeting.get(y);
+			System.out.println("Your list of meetings include meeting IDs: " + meetingPrint.getId());
 		}
-		return meetings;
+		return futureDatesMeeting;
 	}
 	
 	@Override
 	public List<PastMeeting> getPastMeetingListFor(Contact contact) {
-		readSerializedData();
 		List<PastMeeting> pastMeetingArray_BY_CONTACT = new ArrayList<PastMeeting>();
 		for(int x = 0; x < pastMeetingArray.size(); x++){
 			PastMeetingImpl pastMeeting_BY_CONTACT = pastMeetingArray.get(x);
@@ -188,7 +166,6 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public PastMeeting addMeetingNotes(int id, String text) {
-		readSerializedData();
 		PastMeetingImpl currentPastMeeting = new PastMeetingImpl();
 		for(int x = 0; x < pastMeetingArray.size(); x++){
 			currentPastMeeting = pastMeetingArray.get(x);
@@ -212,7 +189,6 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public Set<Contact> getContacts(String name) { 
-		readSerializedData();
 		Contact newContact = new ContactImpl();
 		Set<Contact> listOfContacts = new HashSet();
 		for(int x = 0; x < allContacts.size(); x++){
@@ -226,14 +202,12 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public Set<Contact> getContacts(int... ids){
-		readSerializedData();
 		Contact newContact = new ContactImpl();
 		Set<Contact> listOfContacts = new HashSet<Contact>();
 		for(int id : ids){
 			for(int x = 0; x < allContacts.size(); x++){
 				newContact = allContacts.get(x);
-				int contactID = newContact.getId();
-					if(contactID == id){
+					if(newContact.getId() == id){
 						listOfContacts.add(newContact);
 					}
 				}
@@ -243,7 +217,7 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public void flush() {
-		
+		// TODO Auto-generated method stub
 		
 	}
 	
@@ -281,7 +255,6 @@ public class ContactManagerImpl implements ContactManager {
 			  this.futureMeetingArray = (List<Meeting>)input.readObject();
 			  this.pastMeetingArray = (List<PastMeetingImpl>)pastInput.readObject();
 			  System.out.println("PAST ARRAY = " + pastMeetingArray.size());
-			  System.out.println("FUTURE ARRAY = " + futureMeetingArray.size());
 			  System.out.println("DATA LOADED");
 			 } catch(ClassNotFoundException ex){
 			     ex.printStackTrace();
@@ -297,8 +270,7 @@ public class ContactManagerImpl implements ContactManager {
 	/**
 	 * Exists to add contacts to the global contact array [above] 
 	 */
-	public void contactAdder(Set<Contact> contacts, int ID){
-		//Iterate through hashset, add each contact to the array and also assign the ID to the contact
+	public void contactAdder(Set<Contact> contacts){
 			allContacts.addAll(contacts);
 		}
 	}
