@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import Spec.Contact;
@@ -28,7 +29,14 @@ public class ContactManagerImpl implements ContactManager {
 	List<PastMeetingImpl> pastMeetingArray = new ArrayList<PastMeetingImpl>();
 	List<Contact> allContacts = new ArrayList<Contact>();
 	
-
+public void printallcontacts(){
+	readSerializedData();
+	for (int x = 0; x < allContacts.size(); x++){
+		System.out.println("size of contacts list = " + allContacts.size());
+		System.out.println(allContacts.get(x).getName());
+	}
+		
+}
 	
 	@Override
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
@@ -46,7 +54,7 @@ public class ContactManagerImpl implements ContactManager {
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }
-	      contactAdder(contacts);
+	      contactAdder(contacts, ID);
 		return  ID;
 	}
 	
@@ -70,6 +78,7 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public FutureMeeting getFutureMeeting(int id) {
+		readSerializedData();
 		for(int x = 0; x < futureMeetingArray.size(); x++){
 			Meeting currentMeeting = futureMeetingArray.get(x);
 			if(currentMeeting.getId() == id){
@@ -107,41 +116,74 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public List<Meeting> getFutureMeetingList(Contact contact) {
+		readSerializedData();
 		List<Meeting> futureMeetingList_FOR_CONTACT = new ArrayList<Meeting>();
-		for(int x = 0; x < futureMeetingArray.size(); x++){
+		Set<Contact> contacts = new HashSet<Contact>();
+		List<Contact> cn = new ArrayList<Contact>();
+		Contact currentContact = new ContactImpl();
+	/**	for(int x = 0; x < futureMeetingArray.size(); x++){
+			System.out.println("IN FOR LOOP");
 			Meeting currentMeeting = futureMeetingArray.get(x);
-			if(currentMeeting.getContacts() == contact){
+			contacts = currentMeeting.getContacts();
+			if(contacts.contains(contact.getName())){
+				System.out.println("adding meeting");
 				futureMeetingList_FOR_CONTACT.add(currentMeeting);
 			}
-		}
+		} **/
 		return futureMeetingList_FOR_CONTACT;
 	}
 	
 	@Override
 	public List<Meeting> getMeetingListOn(Calendar date) {
-		List<Meeting> futureDatesMeeting = new ArrayList<Meeting>();
-		for(int x = 0; x < futureMeetingArray.size(); x++){
-			Meeting currentMeeting = futureMeetingArray.get(x);
-			if(currentMeeting.getDate() == date){
-				futureDatesMeeting.add(currentMeeting);
+		readSerializedData();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String formatted = format1.format(date.getTime());
+		List<Meeting> meetings = new ArrayList<Meeting>();
+		Meeting currentMeeting = futureMeetingArray.get(0);
+		if(futureMeetingArray.size() > 0){
+			for(int x = 0; x < futureMeetingArray.size(); x++){
+				currentMeeting = futureMeetingArray.get(x);
+				Calendar currentMeetingsDate = currentMeeting.getDate();
+				System.out.println("s");
+				if(currentMeetingsDate.equals(date)){
+					System.out.println("Adding future meeting");
+					meetings.add(currentMeeting);
+				}
 			}
 		}
-		for(int y = 0; y < futureDatesMeeting.size(); y++){
-			Meeting meetingPrint = futureDatesMeeting.get(y);
-			System.out.println("Your list of meetings include meeting IDs: " + meetingPrint.getId());
+		if(pastMeetingArray.size() > 0){
+			for (int p = 0; p < pastMeetingArray.size(); p++){
+				Meeting currentMeetingPast = new PastMeetingImpl();
+				if(currentMeetingPast.equals(date)){
+					System.out.println("Adding past meeting");
+					meetings.add(currentMeetingPast);
+				}
+			}
 		}
-		return futureDatesMeeting;
+		return meetings;
 	}
 	
 	@Override
 	public List<PastMeeting> getPastMeetingListFor(Contact contact) {
+		readSerializedData();
 		List<PastMeeting> pastMeetingArray_BY_CONTACT = new ArrayList<PastMeeting>();
+		Set<Contact> contacts = new HashSet<Contact>();
+		Iterator<Contact> iterator = contacts.iterator();
 		for(int x = 0; x < pastMeetingArray.size(); x++){
 			PastMeetingImpl pastMeeting_BY_CONTACT = pastMeetingArray.get(x);
-			if(pastMeeting_BY_CONTACT.getContact(contact) == contact){
+			Set<Contact> setofcontacts = pastMeeting_BY_CONTACT.getContacts();
+			Iterator<Contact> it2 = setofcontacts.iterator();
+			while(it2.hasNext()){
+				contacts.add(it2.next());
+			}
+			while(iterator.hasNext()){
+			//if(iterator.hasNext()){
+				if(iterator.next().getName().equals(contact.getName()))
+		//	if(pastMeeting_BY_CONTACT.getContact(contact) == contact){
 				pastMeetingArray.add(pastMeeting_BY_CONTACT);
 			}
 		}
+		System.out.println(pastMeetingArray_BY_CONTACT.size());
 		return pastMeetingArray_BY_CONTACT;
 	}
 	
@@ -151,6 +193,7 @@ public class ContactManagerImpl implements ContactManager {
 		int ID = (int)(Math.random()*500 + 1000); //Creates a random, positive integer for the ID
 		PastMeetingImpl pm = new PastMeetingImpl(contacts, ID, date, text);
 		pastMeetingArray.add(pm);
+		contactAdder(contacts, ID);
 		makeNewFolder();
 	      try {
 	         FileOutputStream fileOut = new FileOutputStream("./serialized/newPastmeeting.out");
@@ -166,11 +209,13 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public PastMeeting addMeetingNotes(int id, String text) {
+		readSerializedData();
 		PastMeetingImpl currentPastMeeting = new PastMeetingImpl();
 		for(int x = 0; x < pastMeetingArray.size(); x++){
 			currentPastMeeting = pastMeetingArray.get(x);
 			if(currentPastMeeting.getId() == id){
 				currentPastMeeting.setNotes(text);
+				System.out.println(currentPastMeeting.getNotes());
 			}
 		}
 		return currentPastMeeting;
@@ -189,25 +234,31 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public Set<Contact> getContacts(String name) { 
+		readSerializedData();
 		Contact newContact = new ContactImpl();
 		Set<Contact> listOfContacts = new HashSet();
+		System.out.println("getting contacts now");
 		for(int x = 0; x < allContacts.size(); x++){
 			newContact = allContacts.get(x);
-				if(newContact.getName() == name){
+				if(newContact.getName().equals(name)){
+					System.out.println(newContact.getName());
 					listOfContacts.add(newContact);
 				}
 		}
+		System.out.println(listOfContacts.size());
 		return listOfContacts;
 	}
 	
 	@Override
 	public Set<Contact> getContacts(int... ids){
+		readSerializedData();
 		Contact newContact = new ContactImpl();
 		Set<Contact> listOfContacts = new HashSet<Contact>();
 		for(int id : ids){
 			for(int x = 0; x < allContacts.size(); x++){
 				newContact = allContacts.get(x);
-					if(newContact.getId() == id){
+				int contactID = newContact.getId();
+					if(contactID == id){
 						listOfContacts.add(newContact);
 					}
 				}
@@ -217,7 +268,7 @@ public class ContactManagerImpl implements ContactManager {
 	
 	@Override
 	public void flush() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
@@ -247,14 +298,19 @@ public class ContactManagerImpl implements ContactManager {
 		 try{
 			  InputStream futureFile = new FileInputStream("./serialized/newfuturemeeting1.out");
 			  InputStream pastFile = new FileInputStream("./serialized/newPastmeeting.out");
+			  InputStream contactsFile = new FileInputStream("./serialized/contacts.out");
 			  InputStream buffer = new BufferedInputStream(futureFile);
 			  InputStream pastBuffer = new BufferedInputStream(pastFile);
+			  InputStream contactsBuffer = new BufferedInputStream(contactsFile);
 			  ObjectInput input = new ObjectInputStream (buffer);
 			  ObjectInput pastInput = new ObjectInputStream (pastBuffer);
+			  ObjectInput contactsInput = new ObjectInputStream(contactsBuffer);
 			  //deserialize the List
 			  this.futureMeetingArray = (List<Meeting>)input.readObject();
 			  this.pastMeetingArray = (List<PastMeetingImpl>)pastInput.readObject();
+			  this.allContacts = (List<Contact>)contactsInput.readObject();
 			  System.out.println("PAST ARRAY = " + pastMeetingArray.size());
+			  System.out.println("FUTURE ARRAY = " + futureMeetingArray.size());
 			  System.out.println("DATA LOADED");
 			 } catch(ClassNotFoundException ex){
 			     ex.printStackTrace();
@@ -270,8 +326,23 @@ public class ContactManagerImpl implements ContactManager {
 	/**
 	 * Exists to add contacts to the global contact array [above] 
 	 */
-	public void contactAdder(Set<Contact> contacts){
-			allContacts.addAll(contacts);
+	public void contactAdder(Set<Contact> contacts, int ID){
+		Iterator<Contact> iterator = contacts.iterator();
+		while(iterator.hasNext()){
+			Contact c = iterator.next();
+			allContacts.add(c);
+			//allContacts.add(iterator.next());
+		}
+			//allContacts.addAll(contacts);
+			try {
+		         FileOutputStream fileOut = new FileOutputStream("./serialized/contacts.out");
+		         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		         out.writeObject(allContacts); //This is so I can use later methods down where you need to get specific meetings in list form
+		         out.close();
+		         fileOut.close();
+		      }catch(IOException i) {
+		         i.printStackTrace();
+		      }
 		}
 	}
 	
