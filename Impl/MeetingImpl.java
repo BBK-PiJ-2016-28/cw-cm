@@ -17,7 +17,20 @@ public abstract class MeetingImpl implements Meeting, Serializable {
 	 **/
 
 	public MeetingImpl(Set<Contact> contacts, int ID, Calendar date){
-			
+		if (ID <= 0){
+			try{
+				
+			}catch (IllegalArgumentException e){
+				System.out.println("No meeting ID has been provided for meeting date " + date);
+			}
+		}
+			if(contacts.isEmpty()){
+				try {
+					
+				} catch (IllegalArgumentException e){
+					System.out.println("There are no contacts for this meeting on " + date);
+				}
+			}
 	}
 	
 	int getIds() {
