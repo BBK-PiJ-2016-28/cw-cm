@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import Spec.Contact;
@@ -26,7 +27,11 @@ public class PastMeetingImpl implements PastMeeting, Serializable {
 				System.out.println("You must provide at least one contact for this meeting");
 			}
 		} else {
-			this.contacts.addAll(contacts);
+			Iterator<Contact> it = contacts.iterator();
+			while(it.hasNext()){
+				this.contacts.add(it.next());
+			}
+			System.out.println("This past meeting contains " + contacts.size() + " contacts");
 			this.date = date;
 			this.ID = ID;
 			this.notes = notes;
@@ -69,7 +74,7 @@ public class PastMeetingImpl implements PastMeeting, Serializable {
 	}
 	
 	public void setNotes(String notes){
-		this.notes = this.notes + "New notes: " + notes;
+		this.notes = this.notes + "\t New notes: " + notes;
 	}
 
 }
