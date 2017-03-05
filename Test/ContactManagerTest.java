@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import Impl.ContactImpl;
 import Impl.ContactManagerImpl;
+import Impl.FutureMeetingImpl;
 import Impl.MeetingImpl;
 import Impl.PastMeetingImpl;
 import Spec.Contact;
@@ -24,22 +25,20 @@ public class ContactManagerTest {
 	public Set<Contact> pastCons = new HashSet<Contact>();
 	public ContactManagerImpl cm = new ContactManagerImpl();
 	int id;
+	public Calendar date = Calendar.getInstance();
 	
 	
-	
-/**	@Test
-	public void testaddFutureMeeting(){
-		Calendar date = Calendar.getInstance();
-		date.set(2017, 02, 27);
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		String formatted = format1.format(date.getTime());
-		cons.add(mark);
-		cm.addFutureMeeting(cons, date); 
-		
-	} 
 	
 	@Test
-	public void addNewPastMeetingTest(){
+	public void testaddFutureMeeting(){ //WORKING
+		System.out.println("---------------------- ADDING NEW FUTURE MEETING -----------------");
+		cons.add(mark);
+		cm.addFutureMeeting(cons, this.date); 
+		System.out.println("----------------------------------------------------------------");
+	} 
+
+	@Test
+	public void addNewPastMeetingTest(){ //WORKING
 		System.out.println("---------------------- ADDING NEW PAST MEETING -----------------");
 		Calendar date = Calendar.getInstance();
 		date.set(2016, 02, 27);
@@ -51,10 +50,10 @@ public class ContactManagerTest {
 		String text = "shiiiiit";
 		cm.addNewPastMeeting(pastCons, date, text);
 		System.out.println("----------------------------------------------------------------");
-	} **/
+	} 
 	
 	@Test
-	public void testGetPastMeeting(){
+	public void testGetPastMeeting(){ //WORKING
 		pastCons.add(mark);
 		pastCons.add(jane);
 		Calendar date = Calendar.getInstance();
@@ -66,27 +65,30 @@ public class ContactManagerTest {
 		PastMeeting pastmeeting = new PastMeetingImpl();
 		pastmeeting = cm.getPastMeeting(id);
 		System.out.println(pastmeeting.getNotes());
-		testGetMeeting(id);
 	} 
 	
 	@Test
 	public void testGetFutureMeeting(){
-		
-	}
-	
-	//@Test
-	public void testGetMeeting(int id){
-		System.out.println("------------------------------------------");
-		System.out.println("Searching for " + id);
-		PastMeeting pastmeeting = new PastMeetingImpl();
-		pastmeeting = (PastMeeting) cm.getMeeting(id);
-		System.out.println(pastmeeting.getNotes());
-		
+		System.out.println("--------------------get future meeting test----------------------");
+		System.out.println("Searching for 1106"); //HERE ADD IN THE ID OF ONE OF THE SERIALIZED OBJECTS, 
+		cm.getFutureMeeting(1413);
 	}
 	
 	@Test
-	public void testGetFutureMeetingList(){
-		
+	public void testGetMeeting(){ //WORKING
+		System.out.println("--------------------get past meeting test----------------------");
+		System.out.println("Searching for 1106"); //HERE ADD IN THE ID OF ONE OF THE SERIALIZED OBJECTS, 
+		PastMeeting pastmeeting = new PastMeetingImpl();
+		pastmeeting = (PastMeeting) cm.getMeeting(1235);
+		System.out.println(pastmeeting.getNotes());
+		System.out.println(pastmeeting.getDate());
+		//System.out.println(pastmeeting.getContacts());
+	}
+	
+	@Test
+	public void testGetFutureMeetingList(){ //WORKING
+		System.out.println("--------------------FUTURE MEETING LIST FOR----------------");
+		cm.getFutureMeetingList(mark);
 	}
 	
 	@Test
@@ -94,19 +96,12 @@ public class ContactManagerTest {
 		
 	}
 	
-/**	@Test
-	public void testgetMeetingListOn(){
-		Calendar date = Calendar.getInstance();
-		date.set(2017, 02, 27);
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		String formatted = format1.format(date.getTime());
-		cons.add(mark); 
-		cons.add(jane);
-		cons.add(rob);
-		cm.addFutureMeeting(cons, date);
-		cm.addFutureMeeting(cons, date);
-		cm.getMeetingListOn(date);
-	} **/
+	@Test
+	public void testgetMeetingListOn(){ //WORKING
+		System.out.println("--------------------GET MEETING LIST ON----------------------");
+		System.out.println("PRINTING THE DATE " + this.date);
+		cm.getMeetingListOn(this.date);
+	} 
 	
 	
 	@Test
@@ -121,7 +116,9 @@ public class ContactManagerTest {
 	
 	@Test
 	public void testGetContacts(){
-		
+		System.out.println("------------GETTING CONTACTS------------");
+		int[] ids = new int[]{1235, 1488};
+		cm.getContacts(ids);
 	}
 	
 	@Test
