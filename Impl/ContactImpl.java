@@ -9,24 +9,32 @@ public class ContactImpl implements Contact, Serializable {
 	private String name;
 	private String notes;
 	
-	
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ID;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	@Override
 	public String getNotes() {
-		// TODO Auto-generated method stub
-		return null;
+		return notes;
 	}
 
 	@Override
