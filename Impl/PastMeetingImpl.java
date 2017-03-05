@@ -7,17 +7,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Spec.Contact;
-import Spec.FutureMeeting;
+import Spec.PastMeeting;
 
-public class FutureMeetingImpl implements FutureMeeting, Serializable {
+public class PastMeetingImpl implements PastMeeting, Serializable {
 	private int ID;
 	private Calendar date;
 	private Set<Contact> contacts = new HashSet();
+	private String notes;
 
-	/**
-	 * 
-	 */
-	public FutureMeetingImpl(Set<Contact> contacts, int ID, Calendar date){
+	public PastMeetingImpl(){
+		
+	}
+	public PastMeetingImpl(Set<Contact> contacts, int ID, Calendar date, String notes){
 		if(contacts.isEmpty()){
 			try{
 				throw new IllegalArgumentException();
@@ -28,16 +29,15 @@ public class FutureMeetingImpl implements FutureMeeting, Serializable {
 			this.contacts.addAll(contacts);
 			this.date = date;
 			this.ID = ID;
+			this.notes = notes;
 			SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 			String formatted = format1.format(date.getTime());
-			System.out.println("New future meeting added for " + formatted + ". Your ID for this meeting is " + ID);
+			System.out.println("New past meeting added for " + formatted + ". Your ID for this meeting is " + ID);
+		}
 		}
 		
-		
-	}
-
 	@Override
-	public int getId() {	
+	public int getId() {
 		return ID;
 	}
 
@@ -50,8 +50,26 @@ public class FutureMeetingImpl implements FutureMeeting, Serializable {
 	public Set<Contact> getContacts() {
 		return contacts;
 	}
+	
+	public Contact getContact(Contact contact){
+		Contact someone = new ContactImpl();
+		for(int x = 0; x < contacts.size(); x++){
+			if (someone == contact){
+				return someone;
+			}
+		}
+		
+		return null;
+		
+	}
 
+	@Override
+	public String getNotes() {
+		return this.notes;
+	}
 	
-	
-	
+	public void setNotes(String notes){
+		this.notes = this.notes + "New notes: " + notes;
+	}
+
 }
