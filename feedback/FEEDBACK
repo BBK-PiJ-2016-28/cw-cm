@@ -1,1 +1,42 @@
+Please look at the general comments to see if any apply.
 
+The structure of the repository doesn't adhere to the recommended
+gradle/maven structure which has made the code awkward to test
+and review. Please adhere to the recommended structure going 
+forward.
+
+Package names should be in lowercase.
+
+We would like to have seen a more indepth set of tests.
+
+You should add javadoc for private fields and methods.
+
+Output is not desirable and exceptions would be preferable.
+If you must use output send it to the console using System.err 
+rather than System.out.
+
+Was there any need to provide a no-arg constructor for 
+PastMeetingImpl?
+
+Why are you using iterators rather than using a foreach structure?
+Make appropriate use of the language constructs going forward 
+(that also applies to Java 8 facilities).
+
+The idea with the persistence was to dump to a file on request and
+on closing the system not at each situation when items are "added" 
+or modified.
+
+The amount of output in your classes is unnecessary and unwanted. 
+Someone else using your classes just wants to know the result of 
+the method call and would probably not want your output in their
+application. 
+
+There are similarities in the codebase that could have been 
+refactored out and would definitely benefit from using Java 8 
+constructs (that is going forward).
+
+The persistence should go to one file by making the CMimpl 
+serialisable rather than using several files and persistence 
+structures.
+
+Good attempt. Pass/Merit.
